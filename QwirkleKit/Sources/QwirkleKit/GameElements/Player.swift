@@ -20,7 +20,8 @@ public struct Player: Sendable {
         
         public var lines: Set<Line> {
             Set<Line>(tiles
-                .combinations(ofCount: 1...Hand.maxTiles)
+                .permutations(ofCount: 1...Hand.maxTiles)
+                //.combinations(ofCount: 1...Hand.maxTiles) i think permutations is the right one
                 .compactMap { try? Line($0) })
         }
         
@@ -35,7 +36,7 @@ public struct Player: Sendable {
 
     public var hand = Hand()
     
-    init(name: String) {
+    public init(name: String) {
         self.name = name
     }
 }
