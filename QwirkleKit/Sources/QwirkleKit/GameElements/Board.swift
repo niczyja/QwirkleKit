@@ -10,16 +10,14 @@ import Foundation
 /// Board that keeps all tiles that were already laid out. Mutable.
 public struct Board: Sendable {
     
-    public static let side: Int = 100
+    public static let side: Int = 20
     
-    private var board: [Tile?] = .init(repeating: nil, count: Board.side * Board.side)
+    public private(set) var tiles: Array2D<Tile?> = .init(columns: Self.side, rows: Self.side, initialValue: nil)
     
-    public func tile(at x: Int, _ y: Int) -> Tile? {
-        board[idx(x, y)]
-    }
+    public init() {}
     
     public func canPlace(_ tile: Tile, at x: Int, _ y: Int) -> Bool {
-        guard self.tile(at: x, y) == nil else { return false }
+        guard tiles[x, y] == nil else { return false }
 
         //TODO: najpierw prosta wersja, czyli sprawdzanie pojedynczego klocka czy pasuje do danej lokalizacji
         //TODO: trzeba się rozejrzeć w poziomie i pionie po planszy. rekrursywnie, bo mogą być kolejne sąsiadujące
@@ -33,12 +31,8 @@ public struct Board: Sendable {
     }
 
     private mutating func put(tile: Tile, at x: Int, _ y: Int) throws {
-        guard self.tile(at: x, y) == nil else { throw QwirkleError.tileAlreadyThere }
+        guard tiles[x, y] == nil else { throw QwirkleError.tileAlreadyThere }
 
-        board[idx(x, y)] = tile
-    }
-
-    private func idx(_ x: Int, _ y: Int) -> Int {
-        Self.side * y + x
+        tiles[x, y] = tile
     }
 }
